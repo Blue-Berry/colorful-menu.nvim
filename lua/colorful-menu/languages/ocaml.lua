@@ -28,6 +28,7 @@ end
 ---@param ls string
 ---@return CMHighlights
 function M.ocamllsp(completion_item, ls)
+    dd(completion_item)
     if completion_item.detail then
         local highlights = utils.highlight_range(completion_item.detail, ls, 0, #completion_item.detail)
         local text = completion_item.label
