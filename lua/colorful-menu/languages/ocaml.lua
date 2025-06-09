@@ -30,8 +30,8 @@ end
 function M.ocamllsp(completion_item, ls)
     if completion_item.detail then
       local detail = completion_item.detail or ""
-        if #detail > 60 then
-          detail = string.sub(detail, 1, 50) .. "…"
+        if #detail > 30 then
+          detail = string.sub(detail, 1, 27) .. "…"
         end
         local highlights = utils.highlight_range(detail, ls, 0, #detail)
         local text = completion_item.label
