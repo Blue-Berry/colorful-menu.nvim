@@ -70,6 +70,10 @@ M.config = {
         dartls = {
             extra_info_hl = "@comment",
         },
+        ocamllsp = {
+            extra_info_hl = "@comment",
+            type_signature_hl = "@type",
+        },
         fallback = true,
         fallback_extra_info_hl = "@comment",
     },
@@ -147,6 +151,9 @@ local function _highlights(completion_item, ls)
         --
     elseif ls == "basedpyright" or ls == "pyright" or ls == "pylance" or ls == "pylsp" then
         item = require("colorful-menu.languages.python").py(completion_item, ls)
+        --
+    elseif ls == "ocamllsp" then
+        item = require("colorful-menu.languages.ocaml").ocamllsp(completion_item, ls)
         --
     else
         -- No languages detected so check if we should highlight with default or not
