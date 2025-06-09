@@ -28,19 +28,22 @@ end
 ---@param ls string
 ---@return CMHighlights
 function M.ocamllsp(completion_item, ls)
-    dd(completion_item)
     if completion_item.detail then
-        local highlights = utils.highlight_range(completion_item.detail, ls, 0, #completion_item.detail)
+      local detail = completion_item.detail or ""
+        if #detail > 60 then
+          detail = string.sub(detail, 1, 50) .. "…"
+        end
+        local highlights = utils.highlight_range(detail, ls, 0, #detail)
         local text = completion_item.label
         local detail_start = #completion_item.label
         if
-            completion_item.detail
-            and string.find(completion_item.detail, "\n") == nil
-            and string.find(completion_item.detail, "\r") == nil
+            detail
+            and string.find(detail, "\n") == nil
+            and string.find(detail, "\r") == nil
         then
-            local spaces = utils.align_spaces(completion_item.label, completion_item.detail)
+            local spaces = utils.align_spaces(completion_item.label, detail)
             -- If there are any information, append it
-            text = completion_item.label .. spaces .. completion_item.detail
+            text = completion_item.label .. spaces .. detail
             detail_start = #completion_item.label + #spaces
             table.insert(highlights.highlights, 1, {
                 hl_by_kind(completion_item),
