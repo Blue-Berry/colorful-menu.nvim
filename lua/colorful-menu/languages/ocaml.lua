@@ -35,30 +35,30 @@ end
 --     }, { "@punctuation.delimiter.ocaml",
 --       range = { 56, 57 },
 --       text = ">"
---     }, 
+--     },
 
 ---@param hl CMHighlights
 ---@return CMHighlights
 local function cleanup_hl(hl)
-  for i, h in ipairs(hl.highlights) do
-    -- Check for ->
-    if h.text == "-" and hl.highlights[i + 1] and hl.highlights[i + 1].text == ">" then
-      h.text = "->"
-      h.range[2] = hl.highlights[i + 1].range[2]
-      table.remove(hl.highlights, i + 1)
+    for i, h in ipairs(hl.highlights) do
+        -- Check for ->
+        if h.text == "-" and hl.highlights[i + 1] and hl.highlights[i + 1].text == ">" then
+            h.text = "->"
+            h.range[2] = hl.highlights[i + 1].range[2]
+            table.remove(hl.highlights, i + 1)
+        end
+        -- check for 'a
+        local valid_variable_hl = {
+            ["@variable.ocaml"] = true,
+            ["@variable"] = true,
+            ["@lsp.type.variable"] = true,
+        }
+        if valid_variable_hl[h.hl_group] and hl.text:sub(h.range[1] - 1, h.range[1] - 1) == "'" then
+            h.range[1] = h.range[1] - 1
+            h.text = "'" .. h.text
+        end
     end
-    -- check for 'a
-    local valid_variable_hl = {
-      ["@variable.ocaml"] = true,
-      ["@variable"] = true,
-      ["@lsp.type.variable"] = true,
-    }
-    if valid_variable_hl[h.hl_group] and hl.text:sub(h.range[1], h.range[1]) == "'" then
-      h.range[1] = h.range[1] - 1
-      h.text = "'" .. h.text
-    end
-  end
-  return hl
+    return hl
 end
 
 ---@param completion_item lsp.CompletionItem
