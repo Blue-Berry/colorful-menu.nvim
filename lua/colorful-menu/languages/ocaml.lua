@@ -83,7 +83,9 @@ function M.ocamllsp(completion_item, ls)
         end
 
         highlights.text = text
-        return cleanup_hl(highlights)
+        highlights = cleanup_hl(highlights)
+        dd(highlights)
+        return highlights
     end
 
     return require("colorful-menu.languages.default").default_highlight(
