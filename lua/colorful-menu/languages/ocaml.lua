@@ -48,15 +48,9 @@ local function cleanup_hl(hl)
             table.remove(hl.highlights, i + 1)
         end
         -- check for 'a
-        local valid_variable_hl = {
-            ["@variable.ocaml"] = true,
-            ["@variable"] = true,
-            ["@lsp.type.variable"] = true,
-        }
         if h.range[1] > 0 and hl.text:sub(h.range[1], h.range[1]) == "'" then
             h.range[1] = h.range[1] - 1
             h.text = "'" .. h.text
-            dd(h)
         end
     end
     return hl
