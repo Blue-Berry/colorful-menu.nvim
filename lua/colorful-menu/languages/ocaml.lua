@@ -53,7 +53,7 @@ local function cleanup_hl(hl)
             ["@variable"] = true,
             ["@lsp.type.variable"] = true,
         }
-        if valid_variable_hl[h.hl_group] and h.range[1] > 0 and (hl.text:sub(h.range[1], h.range[1]) == "'" or hl.text:sub(h.range[1], h.range[1]) == "'") then
+        if h.range[1] > 0 and hl.text:sub(h.range[1], h.range[1]) == "'" then
             h.range[1] = h.range[1] - 1
             h.text = "'" .. h.text
             dd(h)
