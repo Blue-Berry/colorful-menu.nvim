@@ -24,6 +24,34 @@ local function hl_by_kind(completion_item)
     return highlight_name
 end
 
+-- TODO: max sure the full "->" is highlighted, as well as "'a" not just the "-" and "'" respectively
+-- Look for the following:
+-- { "@operator.ocaml",
+--       range = { 49, 50 },
+--       text = "-"
+--     }, { "@punctuation.delimiter.ocaml",
+--       range = { 50, 51 },
+--       text = ">"
+--     }, { "@punctuation.delimiter.ocaml",
+--       range = { 56, 57 },
+--       text = ">"
+--     }, 
+
+---@param hl CMHighlights
+---@return CMHighlights
+local function cleanup_hl(hl)
+  for i, h in ipairs(hl.highlights) do
+    if h.text == "-" and hl.highlights[i + 1] and hl.highlights[i + 1].text == ">" then
+      h.text = "->"
+      h.range[2] = hl.highlights[i + 1].range[2]
+      table.remove(hl.highlights, i + 1)
+      if hl.highlights[i + 1] and hl.highlights[i + 1].text == ">" then
+        table.remove(hl.highlights, i + 1)
+      end
+    end
+  end
+end
+
 ---@param completion_item lsp.CompletionItem
 ---@param ls string
 ---@return CMHighlights
@@ -48,6 +76,7 @@ function M.ocamllsp(completion_item, ls)
             })
         end
 
+        highlights = cleanup_hl(highlights)
         -- offset highlights by detail_start except for the first highlight
         for i, hl in ipairs(highlights.highlights) do
             if i > 1 then
