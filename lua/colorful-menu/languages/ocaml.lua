@@ -45,11 +45,9 @@ local function cleanup_hl(hl)
       h.text = "->"
       h.range[2] = hl.highlights[i + 1].range[2]
       table.remove(hl.highlights, i + 1)
-      if hl.highlights[i + 1] and hl.highlights[i + 1].text == ">" then
-        table.remove(hl.highlights, i + 1)
-      end
     end
   end
+  return hl
 end
 
 ---@param completion_item lsp.CompletionItem
@@ -76,7 +74,6 @@ function M.ocamllsp(completion_item, ls)
             })
         end
 
-        highlights = cleanup_hl(highlights)
         -- offset highlights by detail_start except for the first highlight
         for i, hl in ipairs(highlights.highlights) do
             if i > 1 then
@@ -86,7 +83,7 @@ function M.ocamllsp(completion_item, ls)
         end
 
         highlights.text = text
-        return highlights
+        return cleanup_hl(highlights)
     end
 
     return require("colorful-menu.languages.default").default_highlight(
